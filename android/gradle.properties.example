@@ -1,0 +1,7 @@
+# Copy into android/gradle.properties or pass with -Pbridge.google.serverClientId=...
+# AndroidX is required by the Compose and Credential Manager dependencies.
+android.useAndroidX=true
+org.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=768m -Dfile.encoding=UTF-8
+kotlin.daemon.jvmargs=-Xmx2g
+# This is the Google OAuth Web client ID used to mint ID tokens for the Bridge API.
+bridge.google.serverClientId=REPLACE_WITH_GOOGLE_WEB_CLIENT_ID

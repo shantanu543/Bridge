@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.git
+.idea
+.gradle
+**/build
+.venv
+__pycache__
+assets/reference
