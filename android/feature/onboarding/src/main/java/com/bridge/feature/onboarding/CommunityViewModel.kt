@@ -162,12 +162,18 @@ class CommunityViewModel @Inject constructor(private val repository: OnboardingR
     }
     fun createPod(name: String, goal: String, discoverable: Boolean) = mutate("Your Pod is ready.") { repository.createPod(name, goal, discoverable); repository.loadPods() to { s, v -> s.copy(pods = v) } }
     fun joinPod(pod: PodDto) = mutate("You joined ${pod.name}.") { repository.joinPod(pod.id); repository.loadPods() to { s, v -> s.copy(pods = v) } }
+    fun closeConversation() {
+        mutableState.value = mutableState.value.copy(selectedConversation = null, messages = emptyList())
+    }
     fun selectConversation(conversation: ConversationDto) {
         mutableState.value = mutableState.value.copy(selectedConversation = conversation, messages = emptyList(), error = null)
         viewModelScope.launch { runCatching { repository.loadConversationMessages(conversation.id) }.onSuccess { mutableState.value = mutableState.value.copy(messages = it) }.onFailure { mutableState.value = mutableState.value.copy(error = it.message) } }
     }
     fun sendDirect(conversation: ConversationDto, body: String) {
         viewModelScope.launch { runCatching { repository.sendDirectMessage(conversation.memberId, body) }.onSuccess { selectConversation(conversation); loadConversations() }.onFailure { mutableState.value = mutableState.value.copy(error = it.message) } }
+    }
+    fun closePod() {
+        mutableState.value = mutableState.value.copy(selectedPod = null, messages = emptyList())
     }
     fun selectPod(pod: PodDto) {
         mutableState.value = mutableState.value.copy(selectedPod = pod, messages = emptyList(), error = null)

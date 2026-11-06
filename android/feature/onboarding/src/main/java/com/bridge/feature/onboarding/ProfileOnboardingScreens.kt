@@ -1,5 +1,6 @@
 package com.bridge.feature.onboarding
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,40 +48,47 @@ fun ProfileSourcesScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(BridgePalette.paper)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp, vertical = 24.dp),
     ) {
-        FlowStepHeader(
-            step = 3,
-            title = "Profile import & analysis",
-            description = "Bring your professional story together. Imports are optional; you can continue with a private manual profile.",
-        )
-        Spacer(Modifier.height(18.dp))
-        Text("Choose a profile source", style = MaterialTheme.typography.titleLarge)
+        Text("Build your profile", style = MaterialTheme.typography.headlineMedium, color = BridgePalette.navy)
         Spacer(Modifier.height(6.dp))
         Text(
-            "Connect only through approved integrations or add details yourself.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            "Bring your professional story together.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = BridgePalette.muted,
         )
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(18.dp))
         SourceStatusCard(
             title = "LinkedIn",
-            status = "Official API access is not configured",
-            body = "Bridge does not scrape LinkedIn. Manual entry is available now; user-provided LinkedIn export/PDF import is pending the private document-processing setup.",
+            status = "Soon",
+            body = "Career history, roles and education. Official API access is not configured, so nothing is imported yet.",
         )
         Spacer(Modifier.height(12.dp))
         SourceStatusCard(
             title = "GitHub",
-            status = "OAuth setup is pending",
-            body = "Public profile import is not enabled yet. It will use only approved official API access and your explicit consent; private repositories will not be analyzed.",
+            status = "Soon",
+            body = "Repositories, contributions and activity. OAuth is not enabled yet, and private repositories are never analyzed.",
         )
         Spacer(Modifier.height(12.dp))
         SourceStatusCard(
             title = "Resume",
-            status = "Private upload storage is pending",
-            body = "PDF/DOCX upload and parsing are not enabled yet. They require private storage, file scanning, a parser worker, and an approved retention policy.",
+            status = "Soon",
+            body = "Upload PDF or DOCX once private storage and scanning are available. You can continue with a manual profile now.",
         )
+        Spacer(Modifier.height(12.dp))
+        Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = BridgePalette.lavender), shape = MaterialTheme.shapes.large) {
+            Column(Modifier.padding(16.dp)) {
+                Text("You stay in control", style = MaterialTheme.typography.titleSmall, color = BridgePalette.navy)
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "Review imported details before they appear on your profile.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = BridgePalette.muted,
+                )
+            }
+        }
         if (errorMessage != null) {
             Spacer(Modifier.height(12.dp))
             Text(errorMessage, color = MaterialTheme.colorScheme.error)
@@ -89,9 +97,13 @@ fun ProfileSourcesScreen(
         Button(
             onClick = onContinueManually,
             enabled = !isLoading,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(52.dp),
+            shape = MaterialTheme.shapes.medium,
         ) {
-            if (isLoading) CircularProgressIndicator() else Text("Continue with manual profile")
+            if (isLoading) CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp) else Text("Continue manually")
+        }
+        TextButton(onClick = onContinueManually, enabled = !isLoading, modifier = Modifier.fillMaxWidth()) {
+            Text("I’ll do this later")
         }
         TextButton(onClick = onSignOut, modifier = Modifier.fillMaxWidth()) {
             Text("Sign out")
@@ -103,25 +115,21 @@ fun ProfileSourcesScreen(
 private fun SourceStatusCard(title: String, status: String, body: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(containerColor = BridgePalette.white),
+        border = androidx.compose.foundation.BorderStroke(1.dp, BridgePalette.line),
     ) {
-        Column(Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-            ) {
-                Text(title, style = MaterialTheme.typography.titleLarge)
-                Text(
-                    "Not connected",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Surface(Modifier.size(44.dp), shape = MaterialTheme.shapes.medium, color = BridgePalette.lavender) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(title.take(2).uppercase(), color = BridgePalette.violet, style = MaterialTheme.typography.labelLarge)
+                }
             }
-            Spacer(Modifier.height(4.dp))
-            Text(status, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodyMedium)
-            Spacer(Modifier.height(8.dp))
-            Text(body, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Column(Modifier.padding(start = 12.dp).weight(1f)) {
+                Text(title, style = MaterialTheme.typography.titleMedium, color = BridgePalette.navy)
+                Text(body, style = MaterialTheme.typography.bodySmall, color = BridgePalette.muted)
+            }
+            Text(status, style = MaterialTheme.typography.labelSmall, color = BridgePalette.muted)
         }
     }
 }
@@ -176,13 +184,14 @@ fun ProfileReviewScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(BridgePalette.paper)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp, vertical = 24.dp),
     ) {
         TextButton(onClick = onBack) { Text("Back to sources") }
-        Text("REVIEW & COMPLETE PROFILE", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        Text("COMPLETE PROFILE", style = MaterialTheme.typography.labelMedium, color = BridgePalette.violet)
         Spacer(Modifier.height(4.dp))
-        Text("Review your profile", style = MaterialTheme.typography.headlineMedium)
+        Text("Review your profile", style = MaterialTheme.typography.headlineMedium, color = BridgePalette.navy)
         Spacer(Modifier.height(8.dp))
         Text(
             "Your Bridge profile stays private until you choose what to share. Confirmed details are not employment verification.",

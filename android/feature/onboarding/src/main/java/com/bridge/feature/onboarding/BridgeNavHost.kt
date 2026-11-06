@@ -97,9 +97,15 @@ fun BridgeNavHost(authViewModel: AuthViewModel, allowLocalDemo: Boolean = false)
                         ExternalIdentityProvider.GITHUB -> authViewModel.showError(
                             "GitHub sign-in requires its approved OAuth app configuration.",
                         )
+                        ExternalIdentityProvider.LINKEDIN -> authViewModel.showError(
+                            "LinkedIn sign-in requires its approved OAuth app configuration.",
+                        )
                     }
                 },
-                onEmailSignIn = { navController.navigate("email") },
+                onEmailSignIn = {
+                    authViewModel.clearError()
+                    navController.navigate("email")
+                },
             )
         }
         composable("email") {
@@ -107,7 +113,10 @@ fun BridgeNavHost(authViewModel: AuthViewModel, allowLocalDemo: Boolean = false)
                 isLoading = authState.isLoading,
                 errorMessage = authState.errorMessage,
                 onSubmit = authViewModel::submitEmail,
-                onForgotPassword = { navController.navigate("password-reset") },
+                onForgotPassword = {
+                    authViewModel.clearError()
+                    navController.navigate("password-reset")
+                },
                 onBack = { navController.popBackStack() },
             )
         }

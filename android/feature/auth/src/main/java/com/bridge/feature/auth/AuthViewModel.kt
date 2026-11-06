@@ -85,6 +85,12 @@ class AuthViewModel @Inject constructor(
         mutableState.value = mutableState.value.copy(errorMessage = message)
     }
 
+    fun clearError() {
+        if (mutableState.value.errorMessage != null) {
+            mutableState.value = mutableState.value.copy(errorMessage = null)
+        }
+    }
+
     fun signOut() {
         viewModelScope.launch {
             mutableState.value = mutableState.value.copy(isLoading = true, errorMessage = null)

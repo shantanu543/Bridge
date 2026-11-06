@@ -1,5 +1,6 @@
 package com.bridge.feature.onboarding
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,10 +49,11 @@ fun ConsentScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(com.bridge.core.designsystem.BridgePalette.paper)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 28.dp),
     ) {
-        Text("Your privacy comes first", style = MaterialTheme.typography.headlineMedium)
+        Text("Your privacy comes first", style = MaterialTheme.typography.headlineMedium, color = com.bridge.core.designsystem.BridgePalette.navy)
         Spacer(Modifier.height(8.dp))
         Text(
             "Review Bridge’s current policies before sharing profile data with connected sources. " +

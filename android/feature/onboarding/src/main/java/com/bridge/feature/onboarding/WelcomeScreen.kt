@@ -2,18 +2,23 @@ package com.bridge.feature.onboarding
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,8 +31,8 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalView
@@ -80,6 +85,14 @@ fun SplashScreen(onFinished: () -> Unit) {
                 letterSpacing = 2.6.sp,
                 textAlign = TextAlign.Center,
             )
+            Spacer(Modifier.height(36.dp))
+            Text(
+                text = "A PROFESSIONAL NETWORK WITH PURPOSE",
+                color = BridgePalette.white.copy(alpha = 0.72f),
+                fontSize = 10.sp,
+                letterSpacing = 1.4.sp,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
@@ -91,74 +104,106 @@ fun WelcomeScreen(
     demoLoading: Boolean = false,
     demoError: String? = null,
 ) {
-    SetDarkSystemBars()
-    Box(
+    SetLightSystemBars(BridgePalette.paper)
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(BridgePalette.navy, BridgePalette.ink, ColorForWelcome.purple),
-                ),
-            ),
-        contentAlignment = Alignment.Center,
+            .background(BridgePalette.paper)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp, vertical = 28.dp),
     ) {
-        BottomWaveArtwork(Modifier.fillMaxSize())
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 28.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+        Text(
+            "WELCOME TO BRIDGE",
+            color = BridgePalette.violet,
+            style = MaterialTheme.typography.labelMedium,
+            letterSpacing = 1.2.sp,
+        )
+        Spacer(Modifier.height(18.dp))
+        BridgeLogoMark(Modifier.size(width = 56.dp, height = 48.dp))
+        Spacer(Modifier.height(18.dp))
+        Text(
+            "Build a circle that\nmoves you forward.",
+            color = BridgePalette.navy,
+            style = MaterialTheme.typography.displayMedium,
+        )
+        Spacer(Modifier.height(12.dp))
+        Text(
+            "Meet verified professionals who share your ambition, craft and intent.",
+            color = BridgePalette.muted,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Spacer(Modifier.height(22.dp))
+        WelcomeValue("01", "Signal over noise", "Quality connections, not vanity metrics.")
+        Spacer(Modifier.height(10.dp))
+        WelcomeValue("02", "Built on proof", "A profile grounded in real professional work.")
+        Spacer(Modifier.height(10.dp))
+        WelcomeValue("03", "Made for momentum", "Turn conversations into opportunities.")
+        Spacer(Modifier.height(28.dp))
+        Button(
+            onClick = onContinue,
+            modifier = Modifier.fillMaxWidth().height(52.dp),
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.buttonColors(containerColor = BridgePalette.violet, contentColor = BridgePalette.white),
         ) {
-            BridgeLogoMark(Modifier.size(width = 112.dp, height = 90.dp))
-            Spacer(Modifier.height(12.dp))
-            Text(
-                text = "Bridge",
-                color = BridgePalette.white,
-                fontSize = 46.sp,
-                lineHeight = 52.sp,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                letterSpacing = (-1.2).sp,
-                maxLines = 1,
-                overflow = TextOverflow.Clip,
-            )
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = "RIGHT PEOPLE.\nREAL INTENT.\nNO NOISE.",
-                color = BridgePalette.white,
-                letterSpacing = 2.sp,
-                textAlign = TextAlign.Center,
-                lineHeight = 21.sp,
-                fontSize = 12.sp,
-            )
-            Spacer(Modifier.height(34.dp))
-            Button(onClick = onContinue, modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium) {
-                Text("Get started")
+            Text("Get started", style = MaterialTheme.typography.labelLarge)
+        }
+        Spacer(Modifier.height(12.dp))
+        Text(
+            "By continuing, you agree to our Terms and Privacy Policy.",
+            color = BridgePalette.muted,
+            style = MaterialTheme.typography.bodySmall,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        if (onLocalDemo != null) {
+            TextButton(onClick = onLocalDemo, enabled = !demoLoading, modifier = Modifier.fillMaxWidth()) {
+                if (demoLoading) CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp, color = BridgePalette.violet)
+                else Text("Explore local demo", color = BridgePalette.violet)
             }
-            if (onLocalDemo != null) {
-                Spacer(Modifier.height(10.dp))
-                OutlinedButton(
-                    onClick = onLocalDemo,
-                    enabled = !demoLoading,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, BridgePalette.white.copy(alpha = 0.58f)),
-                ) {
-                    if (demoLoading) CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
-                    else Text("Explore local demo", color = BridgePalette.white)
-                }
-                Text(
-                    "DEV BUILD  ·  SYNTHETIC DATA",
-                    color = BridgePalette.white.copy(alpha = 0.75f),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelSmall,
-                    letterSpacing = 0.8.sp,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-                demoError?.let {
-                    Text(it, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
+            demoError?.let {
+                Text(it, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            }
+        }
+    }
+}
+
+@Composable
+private fun WelcomeValue(index: String, title: String, body: String) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        color = BridgePalette.white,
+        shadowElevation = 0.dp,
+        border = androidx.compose.foundation.BorderStroke(1.dp, BridgePalette.line),
+    ) {
+        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+            Surface(Modifier.size(36.dp), shape = CircleShape, color = BridgePalette.lavender) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(index, color = BridgePalette.violet, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                 }
             }
+            Column(Modifier.padding(start = 12.dp)) {
+                Text(title, color = BridgePalette.navy, style = MaterialTheme.typography.titleSmall)
+                Text(body, color = BridgePalette.muted, style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+}
+
+@Composable
+private fun SetLightSystemBars(color: androidx.compose.ui.graphics.Color) {
+    val view = LocalView.current
+    SideEffect {
+        (view.context as? Activity)?.window?.let { window ->
+            val packed = android.graphics.Color.rgb(
+                (color.red * 255).toInt(),
+                (color.green * 255).toInt(),
+                (color.blue * 255).toInt(),
+            )
+            window.statusBarColor = packed
+            window.navigationBarColor = packed
+            window.decorView.systemUiVisibility =
+                android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         }
     }
 }
